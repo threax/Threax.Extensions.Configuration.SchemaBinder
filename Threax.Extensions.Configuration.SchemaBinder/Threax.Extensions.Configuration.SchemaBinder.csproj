@@ -7,6 +7,7 @@
     <Company />
     <Product />
     <Description>This library helps track configuration information to build a json schema from the requested objects.</Description>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

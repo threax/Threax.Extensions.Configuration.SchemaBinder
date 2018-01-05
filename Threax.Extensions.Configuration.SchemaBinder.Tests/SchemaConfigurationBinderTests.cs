@@ -95,6 +95,19 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
             }
             Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "ConfigSectionAndObject.json"), json);
         }
+
+        [Fact]
+        public async Task DefineTest()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Define("AppConfig", typeof(AppSettings));
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "DefineTest.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "DefineTest.json"), json);
+        }
     }
 
     class AppSettings

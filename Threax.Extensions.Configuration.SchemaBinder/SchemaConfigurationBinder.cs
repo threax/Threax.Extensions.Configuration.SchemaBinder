@@ -36,6 +36,17 @@ namespace Threax.Extensions.Configuration.SchemaBinder
         }
 
         /// <summary>
+        /// Define a section to be typed by type. This can be used if the Bind function would not be called on
+        /// startup for the given section and you want to define it.
+        /// </summary>
+        /// <param name="section">The name of the section.</param>
+        /// <param name="type">The type to use.</param>
+        public void Define(String section, Type type)
+        {
+            configObjects[section] = type;
+        }
+
+        /// <summary>
         /// Get a config section if one needs to be passed on. Since no object is provided this section
         /// will be added to the schema as a plain object.
         /// </summary>
