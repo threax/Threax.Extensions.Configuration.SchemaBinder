@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "GetSectionTest": {
+      "type": [
+        "null",
+        "object"
+      ]
+    },
+    "AppConfig": {
+      "$ref": "#/definitions/AppConfig"
+    }
+  },
+  "definitions": {
+    "AppConfig": {
+      "title": "AppSettings",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ConnectionString": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "AnotherAppSetting": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

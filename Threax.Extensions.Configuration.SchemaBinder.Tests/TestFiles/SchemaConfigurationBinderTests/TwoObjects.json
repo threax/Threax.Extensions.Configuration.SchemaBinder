@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "AppConfig": {
+      "$ref": "#/definitions/AppConfig"
+    },
+    "ClientConfig": {
+      "$ref": "#/definitions/ClientConfig"
+    }
+  },
+  "definitions": {
+    "AppConfig": {
+      "title": "AppSettings",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ConnectionString": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "AnotherAppSetting": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ClientConfig": {
+      "title": "ClientSettings",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ServiceUrl": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "SomeOtherConfig": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    }
+  }
+}

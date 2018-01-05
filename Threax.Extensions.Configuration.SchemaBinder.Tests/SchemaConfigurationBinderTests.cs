@@ -1,0 +1,113 @@
+//#define WriteTestFiles
+using Microsoft.Extensions.Configuration;
+using Moq;
+using System;
+using System.Threading.Tasks;
+using Threax.AspNetCore.Tests;
+using Xunit;
+
+namespace Threax.Extensions.Configuration.SchemaBinder.Tests
+{
+    public class SchemaConfigurationBinderTests
+    {
+        private Mockup mockup = new Mockup();
+
+#if WriteTestFiles
+        private bool WriteTestFiles = true;
+#else
+        private bool WriteTestFiles = false;
+#endif
+
+        public SchemaConfigurationBinderTests()
+        {
+            var builder = new ConfigurationBuilder();
+            mockup.Add<IConfiguration>(s =>
+            {
+                var mock = new Mock<IConfiguration>();
+                mock.Setup(i => i.GetSection(It.IsAny<String>())).Returns(s.Get<IConfigurationSection>());
+                return mock.Object;
+            });
+            mockup.Add<SchemaConfigurationBinder>(s => new SchemaConfigurationBinder(s.Get<IConfiguration>()));
+        }
+
+        [Fact]
+        public async Task EmptySchema()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "EmptySchema.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "EmptySchema.json"), json);
+        }
+
+        [Fact]
+        public async Task OneObject()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("AppConfig", new AppSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "OneObject.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "OneObject.json"), json);
+        }
+
+        [Fact]
+        public async Task TwoObjects()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("AppConfig", new AppSettings());
+            binder.Bind("ClientConfig", new ClientSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "TwoObjects.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "TwoObjects.json"), json);
+        }
+
+        [Fact]
+        public async Task ConfigSection()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.GetSection("GetSectionTest");
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "ConfigSection.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "ConfigSection.json"), json);
+        }
+
+        [Fact]
+        public async Task ConfigSectionAndObject()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.GetSection("GetSectionTest");
+            binder.Bind("AppConfig", new AppSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "ConfigSectionAndObject.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "ConfigSectionAndObject.json"), json);
+        }
+    }
+
+    class AppSettings
+    {
+        public String ConnectionString { get; set; }
+
+        public int AnotherAppSetting { get; set; }
+    }
+
+    class ClientSettings
+    {
+        public String ServiceUrl { get; set; }
+
+        public String SomeOtherConfig { get; set; }
+    }
+}

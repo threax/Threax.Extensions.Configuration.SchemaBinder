@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Threax.Extensions.Configuration.SchemaBinder", "Threax.Extensions.Configuration.SchemaBinder\Threax.Extensions.Configuration.SchemaBinder.csproj", "{B6C65579-0D59-40C0-8399-D1C3A898B0D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Threax.Extensions.Configuration.SchemaBinder.Tests", "Threax.Extensions.Configuration.SchemaBinder.Tests\Threax.Extensions.Configuration.SchemaBinder.Tests.csproj", "{7F3C3610-35EE-47F8-8614-6FB98E01D7F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B6C65579-0D59-40C0-8399-D1C3A898B0D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6C65579-0D59-40C0-8399-D1C3A898B0D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6C65579-0D59-40C0-8399-D1C3A898B0D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F3C3610-35EE-47F8-8614-6FB98E01D7F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F3C3610-35EE-47F8-8614-6FB98E01D7F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F3C3610-35EE-47F8-8614-6FB98E01D7F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F3C3610-35EE-47F8-8614-6FB98E01D7F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
