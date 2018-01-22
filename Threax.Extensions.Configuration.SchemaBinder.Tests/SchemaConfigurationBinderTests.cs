@@ -70,6 +70,19 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
         }
 
         [Fact]
+        public async Task WithComments()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("AppConfig", new WithCommentsSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "WithComments.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "WithComments.json"), json);
+        }
+
+        [Fact]
         public async Task ConfigSection()
         {
             var binder = mockup.Get<SchemaConfigurationBinder>();
@@ -122,5 +135,13 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
         public String ServiceUrl { get; set; }
 
         public String SomeOtherConfig { get; set; }
+    }
+
+    class WithCommentsSettings
+    {
+        /// <summary>
+        /// This has a description.
+        /// </summary>
+        public String Test { get; set; }
     }
 }
