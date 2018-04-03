@@ -88,7 +88,7 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
         public void NotFound()
         {
             var builder = mockup.Get<IConfigurationBuilder>();
-            Assert.Throws<FileNotFoundException>(() => builder.AddJsonFileWithInclude(Path.Combine(TestFilePath, "missing.json"), true, false));
+            Assert.Throws<FileNotFoundException>(() => builder.AddJsonFileWithInclude(Path.Combine(TestFilePath, "notfound.json"), true, false));
         }
 
         [Fact]
