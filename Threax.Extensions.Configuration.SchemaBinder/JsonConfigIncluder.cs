@@ -9,13 +9,22 @@ using System.Text;
 
 namespace Microsoft.Extensions.Configuration
 {
-    public static class IConfigurationBuilderExtensions
+    public static class JsonConfigIncluder
     {
-        public static IConfigurationBuilder AddJsonFileWithIncludes(this IConfigurationBuilder builder, string path)
+        /// <summary>
+        /// Add a json configuration file that supports an Include property in the top level object. This Include property
+        /// will be used to load additional json config files relative to the current file. Included files will be added to the
+        /// builder before the passed in file allowing it to override settings from included files. If a file is included by a config
+        /// file and isn't found a FileNotFound exception will be thrown.
+        /// </summary>
+        /// <param name="builder">The Microsoft.Extensions.Configuration.IConfigurationBuilder to add to.</param>
+        /// <param name="path">Path relative to the base path stored in Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties of builder.</param>
+        /// <returns>The Microsoft.Extensions.Configuration.IConfigurationBuilder.</returns>
+        public static IConfigurationBuilder AddJsonFileWithInclude(this IConfigurationBuilder builder, string path)
         {
             foreach(var include in FindIncludes(path))
             {
-
+                builder.AddJsonFileWithInclude(include);
             }
 
             builder.AddJsonFile(path);
@@ -23,39 +32,60 @@ namespace Microsoft.Extensions.Configuration
             return builder;
         }
 
-        public static IConfigurationBuilder AddJsonFileWithIncludes(this IConfigurationBuilder builder, string path, bool optional)
+
+        /// <summary>
+        /// Add a json configuration file that supports an Include property in the top level object. This Include property
+        /// will be used to load additional json config files relative to the current file. Included files will be added to the
+        /// builder before the passed in file allowing it to override settings from included files. If a file is included by a config
+        /// file and isn't found a FileNotFound exception will be thrown.
+        /// </summary>
+        /// <param name="builder">The Microsoft.Extensions.Configuration.IConfigurationBuilder to add to.</param>
+        /// <param name="path">Path relative to the base path stored in Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties of builder.</param>
+        /// <param name="optional">Whether the file is optional.</param>
+        /// <returns>The Microsoft.Extensions.Configuration.IConfigurationBuilder.</returns>
+        public static IConfigurationBuilder AddJsonFileWithInclude(this IConfigurationBuilder builder, string path, bool optional)
         {
+            foreach (var include in FindIncludes(path))
+            {
+                builder.AddJsonFileWithInclude(include, optional);
+            }
+
             builder.AddJsonFile(path, optional);
 
             return builder;
         }
 
-        public static IConfigurationBuilder AddJsonFileWithIncludes(this IConfigurationBuilder builder, string path, bool optional, bool reloadOnChange)
+        /// <summary>
+        /// Add a json configuration file that supports an Include property in the top level object. This Include property
+        /// will be used to load additional json config files relative to the current file. Included files will be added to the
+        /// builder before the passed in file allowing it to override settings from included files. If a file is included by a config
+        /// file and isn't found a FileNotFound exception will be thrown.
+        /// </summary>
+        /// <param name="builder">The Microsoft.Extensions.Configuration.IConfigurationBuilder to add to.</param>
+        /// <param name="path">Path relative to the base path stored in Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties of builder.</param>
+        /// <param name="optional">Whether the file is optional.</param>
+        /// <param name="reloadOnChange">Whether the configuration should be reloaded if the file changes. Will apply to included files.</param>
+        /// <returns>The Microsoft.Extensions.Configuration.IConfigurationBuilder.</returns>
+        public static IConfigurationBuilder AddJsonFileWithInclude(this IConfigurationBuilder builder, string path, bool optional, bool reloadOnChange)
         {
+            foreach (var include in FindIncludes(path))
+            {
+                builder.AddJsonFileWithInclude(include, optional, reloadOnChange);
+            }
+
             builder.AddJsonFile(path, optional, reloadOnChange);
 
             return builder;
         }
 
-        public static IConfigurationBuilder AddJsonFileWithIncludes(this IConfigurationBuilder builder, IFileProvider provider, string path, bool optional, bool reloadOnChange)
-        {
-            builder.AddJsonFile(provider, path, optional, reloadOnChange);
-
-            return builder;
-        }
-
-        //public static IConfigurationBuilder AddJsonFileWithIncludes(this IConfigurationBuilder builder, Action<JsonConfigurationSource> configureSource)
-        //{
-
-        //}
-
         private static IEnumerable<String> FindIncludes(string path)
         {
             var fullPath = Path.GetFullPath(path);
+            var rootFolder = Path.GetDirectoryName(fullPath);
             //Load the file to see if there are any includes
             if (!File.Exists(fullPath))
             {
-                yield break;
+                throw new FileNotFoundException("Cannot find include file.", fullPath);
             }
 
             JObject jObj;
@@ -80,7 +110,11 @@ namespace Microsoft.Extensions.Configuration
 
             foreach(var include in includes)
             {
-                
+                var value = include as JValue;
+                if (value != null && value.Type == JTokenType.String)
+                {
+                    yield return Path.Combine(rootFolder, value.Value<String>());
+                }
             }
         }
     }

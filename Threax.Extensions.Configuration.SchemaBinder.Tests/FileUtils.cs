@@ -7,7 +7,7 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
 {
     static class FileUtils
     {
-        private static String TestFileDirectory => Path.Combine(Directory.GetCurrentDirectory(), "../../../TestFiles");
+        public static String TestFileDirectory => Path.Combine(Directory.GetCurrentDirectory(), "../../../TestFiles");
 
         public static void WriteTestFile(Type testType, String filename, String contents)
         {
