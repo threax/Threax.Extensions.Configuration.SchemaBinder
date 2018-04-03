@@ -8,6 +8,8 @@
     <Version>1.2.0</Version>
     <IncludeSymbols>True</IncludeSymbols>
     <IncludeSource>True</IncludeSource>
+    <PackageReleaseNotes>Added an extension method AddJsonFileWithInclude to IConfigurationBuilder that allows the json files to define an Include array of additionally included files.
+Also flattened hierarchy when building schema defintion file. This works much better.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -101,5 +101,16 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
             Assert.Equal("insubfolder.json", sources[1].Path);
             Assert.Equal("nested.json", sources[2].Path);
         }
+
+        [Fact]
+        public void MultipleInclude()
+        {
+            var builder = mockup.Get<IConfigurationBuilder>();
+            builder.AddJsonFileWithInclude(Path.Combine(TestFilePath, "multiple.json"));
+            Assert.Equal(3, sources.Count);
+            Assert.Equal("include.json", sources[0].Path);
+            Assert.Equal("include2.json", sources[1].Path);
+            Assert.Equal("multiple.json", sources[2].Path);
+        }
     }
 }
