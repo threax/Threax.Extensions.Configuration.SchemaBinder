@@ -121,6 +121,19 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
             }
             Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "DefineTest.json"), json);
         }
+
+        [Fact]
+        public async Task Inheritance()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("AppConfig", new Subclass());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "Inheritance.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "Inheritance.json"), json);
+        }
     }
 
     class AppSettings
@@ -143,5 +156,15 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
         /// This has a description.
         /// </summary>
         public String Test { get; set; }
+    }
+
+    class Superclass
+    {
+        public int SuperclassProp { get; set; }
+    }
+
+    class Subclass : Superclass
+    {
+        public int SubclassProp { get; set; }
     }
 }

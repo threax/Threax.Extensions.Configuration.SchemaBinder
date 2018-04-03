@@ -64,7 +64,10 @@ namespace Threax.Extensions.Configuration.SchemaBinder
         /// <returns>The json schema as a string.</returns>
         public async Task<String> CreateSchema()
         {
-            var settings = new JsonSchemaGeneratorSettings();
+            var settings = new JsonSchemaGeneratorSettings()
+            {
+                FlattenInheritanceHierarchy = true
+            };
             var generator = new JsonSchemaGenerator(settings);
 
             var schema = new JsonSchema4();
