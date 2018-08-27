@@ -89,7 +89,7 @@ namespace Microsoft.Extensions.Configuration
                 {
                     yield break;
                 }
-                throw new FileNotFoundException("Cannot find include file.", fullPath);
+                throw new FileNotFoundException($"Cannot find include file {path}.\nFullPath: {fullPath}", fullPath);
             }
 
             JObject jObj;
