@@ -66,7 +66,8 @@ namespace Threax.Extensions.Configuration.SchemaBinder
         {
             var settings = new JsonSchemaGeneratorSettings()
             {
-                FlattenInheritanceHierarchy = true
+                FlattenInheritanceHierarchy = true,
+                DefaultEnumHandling = EnumHandling.String
             };
             var generator = new JsonSchemaGenerator(settings);
 

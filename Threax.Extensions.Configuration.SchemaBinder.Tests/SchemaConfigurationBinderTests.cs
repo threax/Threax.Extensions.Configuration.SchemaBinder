@@ -134,6 +134,19 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
             }
             Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "Inheritance.json"), json);
         }
+
+        [Fact]
+        public async Task Enum()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("AppConfig", new EnumTest());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "Enum.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "Enum.json"), json);
+        }
     }
 
     class AppSettings
@@ -166,5 +179,16 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
     class Subclass : Superclass
     {
         public int SubclassProp { get; set; }
+    }
+
+    enum TestEnum
+    {
+        Value1,
+        Value2
+    }
+
+    class EnumTest
+    {
+        public TestEnum TestEnum { get; set; }
     }
 }

@@ -5,11 +5,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Andrew Piper</Authors>
     <Description>This library helps track configuration information to build a json schema from the requested objects.</Description>
-    <Version>1.2.0</Version>
+    <Version>1.3.0-pre1</Version>
     <IncludeSymbols>True</IncludeSymbols>
     <IncludeSource>True</IncludeSource>
-    <PackageReleaseNotes>Added an extension method AddJsonFileWithInclude to IConfigurationBuilder that allows the json files to define an Include array of additionally included files.
-Also flattened hierarchy when building schema defintion file. This works much better.</PackageReleaseNotes>
+    <PackageReleaseNotes>Set enum handling to output string names instead of numbers.</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "AppConfig": {
+      "$ref": "#/definitions/AppConfig"
+    }
+  },
+  "definitions": {
+    "AppConfig": {
+      "title": "EnumTest",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TestEnum": {
+          "$ref": "#/definitions/AppConfig/definitions/TestEnum"
+        }
+      },
+      "definitions": {
+        "TestEnum": {
+          "type": "string",
+          "description": "",
+          "x-enumNames": [
+            "Value1",
+            "Value2"
+          ],
+          "enum": [
+            "Value1",
+            "Value2"
+          ]
+        }
+      }
+    }
+  }
+}
