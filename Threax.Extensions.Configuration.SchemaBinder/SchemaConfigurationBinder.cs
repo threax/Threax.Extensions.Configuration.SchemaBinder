@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Primitives;
 using NJsonSchema;
 using NJsonSchema.Generation;
 using System;
@@ -12,7 +13,7 @@ namespace Threax.Extensions.Configuration.SchemaBinder
     /// This information can then be used to generate a json schema for the app's settings, which
     /// provide nice intellisense in some editors.
     /// </summary>
-    public class SchemaConfigurationBinder
+    public class SchemaConfigurationBinder : IConfiguration
     {
         private IConfiguration config;
         private Dictionary<String, Type> configObjects = new Dictionary<String, Type>();
@@ -46,16 +47,26 @@ namespace Threax.Extensions.Configuration.SchemaBinder
             configObjects[section] = type;
         }
 
+        public IEnumerable<IConfigurationSection> GetChildren()
+        {
+            return config.GetChildren();
+        }
+
+        public IChangeToken GetReloadToken()
+        {
+            return config.GetReloadToken();
+        }
+
         /// <summary>
         /// Get a config section if one needs to be passed on. Since no object is provided this section
         /// will be added to the schema as a plain object.
         /// </summary>
-        /// <param name="section">The name of the section.</param>
+        /// <param name="key">The name of the section.</param>
         /// <returns></returns>
-        public IConfigurationSection GetSection(String section)
+        public IConfigurationSection GetSection(String key)
         {
-            configObjects[section] = typeof(Object);
-            return config.GetSection(section);
+            configObjects[key] = typeof(Object);
+            return config.GetSection(key);
         }
 
         /// <summary>
@@ -93,6 +104,18 @@ namespace Threax.Extensions.Configuration.SchemaBinder
                 }
             }
             return schema.ToJson();
+        }
+
+        public string this[string key]
+        {
+            get
+            {
+                return config[key];
+            }
+            set
+            {
+                config[key] = value;
+            }
         }
     }
 }

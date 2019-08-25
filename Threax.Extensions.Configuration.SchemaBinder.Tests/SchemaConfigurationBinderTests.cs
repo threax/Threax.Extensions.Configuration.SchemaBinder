@@ -25,6 +25,7 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
             {
                 var mock = new Mock<IConfiguration>();
                 mock.Setup(i => i.GetSection(It.IsAny<String>())).Returns(s.Get<IConfigurationSection>());
+                mock.Setup(i => i[It.IsAny<String>()]).Returns("Hi");
                 return mock.Object;
             });
             mockup.Add<SchemaConfigurationBinder>(s => new SchemaConfigurationBinder(s.Get<IConfiguration>()));
@@ -107,6 +108,14 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
                 FileUtils.WriteTestFile(this.GetType(), "ConfigSectionAndObject.json", json);
             }
             Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "ConfigSectionAndObject.json"), json);
+        }
+
+        [Fact]
+        public async Task GetValueTest()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            Assert.Equal("Hi", binder["GetValueTest"]);
+            Assert.Equal("Hi", binder["TheyAllReturnHi"]);
         }
 
         [Fact]
