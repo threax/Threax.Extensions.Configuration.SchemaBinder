@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "properties": {
+    "ClientConfig": {
+      "$ref": "#/definitions/ClientConfig"
+    }
+  },
+  "definitions": {
+    "ClientConfig": {
+      "title": "ClientSettings",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "TestEnum": {
+          "$ref": "#/definitions/ClientConfig/definitions/TestEnum"
+        },
+        "ServiceUrl": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "SomeOtherConfig": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "definitions": {
+        "TestEnum": {
+          "type": "string",
+          "description": "",
+          "x-enumNames": [
+            "Value1",
+            "Value2"
+          ],
+          "enum": [
+            "Value1",
+            "Value2"
+          ]
+        }
+      }
+    }
+  }
+}

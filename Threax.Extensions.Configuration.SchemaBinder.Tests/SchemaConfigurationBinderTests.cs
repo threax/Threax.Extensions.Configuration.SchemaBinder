@@ -156,6 +156,91 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
             }
             Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "Enum.json"), json);
         }
+
+        [Fact]
+        public async Task OnePropTwoObjects()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("ClientConfig", new AppSettings());
+            binder.Bind("ClientConfig", new ClientSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "OnePropTwoObjects.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "OnePropTwoObjects.json"), json);
+        }
+
+        [Fact]
+        public async Task OnePropTwoObjectsEnum()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("ClientConfig", new EnumTest());
+            binder.Bind("ClientConfig", new ClientSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "OnePropTwoObjectsEnum.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "OnePropTwoObjectsEnum.json"), json);
+        }
+
+        [Fact]
+        public async Task OnePropTwoObjectsEnumSame()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("ClientConfig", new EnumTest());
+            binder.Bind("ClientConfig", new EnumTest());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "OnePropTwoObjectsEnumSame.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "OnePropTwoObjectsEnumSame.json"), json);
+        }
+
+        [Fact]
+        public async Task OnePropTwoObjectsSame()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Bind("ClientConfig", new ClientSettings());
+            binder.Bind("ClientConfig", new ClientSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "OnePropTwoObjectsSame.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "OnePropTwoObjectsSame.json"), json);
+        }
+
+        [Fact]
+        public async Task OnePropTwoObjectsDefine()
+        {
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.Define("ClientConfig", typeof(AppSettings));
+            binder.Bind("ClientConfig", new ClientSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "OnePropTwoObjectsDefine.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "OnePropTwoObjectsDefine.json"), json);
+        }
+
+        [Fact]
+        public async Task OnePropTwoObjectsWithObject()
+        {
+            //This test ensures that combining with an object returns a plain object definition.
+            var binder = mockup.Get<SchemaConfigurationBinder>();
+            binder.GetSection("ClientConfig");
+            binder.Bind("ClientConfig", new ClientSettings());
+            var json = await binder.CreateSchema();
+            if (WriteTestFiles)
+            {
+                FileUtils.WriteTestFile(this.GetType(), "OnePropTwoObjectsWithObject.json", json);
+            }
+            Assert.Equal(FileUtils.ReadTestFile(this.GetType(), "OnePropTwoObjectsWithObject.json"), json);
+        }
     }
 
     class AppSettings

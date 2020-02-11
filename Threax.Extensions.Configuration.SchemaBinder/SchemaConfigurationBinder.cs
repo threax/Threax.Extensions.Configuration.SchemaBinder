@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json.Linq;
 using NJsonSchema;
 using NJsonSchema.Generation;
 using System;
@@ -16,7 +17,7 @@ namespace Threax.Extensions.Configuration.SchemaBinder
     public class SchemaConfigurationBinder : IConfiguration
     {
         private IConfiguration config;
-        private Dictionary<String, Type> configObjects = new Dictionary<String, Type>();
+        private Dictionary<String, List<Type>> configObjects = new Dictionary<String, List<Type>>();
 
         public SchemaConfigurationBinder(IConfiguration config)
         {
@@ -32,7 +33,8 @@ namespace Threax.Extensions.Configuration.SchemaBinder
         /// <param name="instance">The object instance to bind to section.</param>
         public void Bind(String section, Object instance)
         {
-            configObjects[section] = instance.GetType();
+            EnsureSection(section);
+            configObjects[section].Add(instance.GetType());
             config.Bind(section, instance);
         }
 
@@ -44,7 +46,8 @@ namespace Threax.Extensions.Configuration.SchemaBinder
         /// <param name="type">The type to use.</param>
         public void Define(String section, Type type)
         {
-            configObjects[section] = type;
+            EnsureSection(section);
+            configObjects[section].Add(type);
         }
 
         public IEnumerable<IConfigurationSection> GetChildren()
@@ -65,7 +68,8 @@ namespace Threax.Extensions.Configuration.SchemaBinder
         /// <returns></returns>
         public IConfigurationSection GetSection(String key)
         {
-            configObjects[key] = typeof(Object);
+            EnsureSection(key);
+            configObjects[key].Add(typeof(Object));
             return config.GetSection(key);
         }
 
@@ -82,25 +86,41 @@ namespace Threax.Extensions.Configuration.SchemaBinder
             };
             var generator = new JsonSchemaGenerator(settings);
 
+            var mergeSettings = new JsonMergeSettings()
+            {
+                MergeArrayHandling = MergeArrayHandling.Union
+            };
             var schema = new JsonSchema4();
             foreach (var itemKey in configObjects.Keys)
             {
-                var item = configObjects[itemKey];
-                if (item == typeof(Object))
+                var property = new JsonProperty();
+                JObject itemSchema = new JObject();
+                foreach (var item in configObjects[itemKey])
                 {
-                    schema.Properties.Add(itemKey, new JsonProperty()
+                    if (item != typeof(Object))
                     {
-                        Type = JsonObjectType.Null | JsonObjectType.Object
-                    });
+                        var jsonSchema = await generator.GenerateAsync(item);
+                        var jObjSchema = JObject.Parse(jsonSchema.ToJson());
+                        jObjSchema["$schema"]?.Parent?.Remove(); //Remove any $schema properties
+                        itemSchema.Merge(jObjSchema, mergeSettings);
+                    }
+                    else
+                    {
+                        //If the type is ever object, set the type to object and stop
+                        itemSchema = new JObject();
+                        property = new JsonProperty()
+                        {
+                            Type = JsonObjectType.Null | JsonObjectType.Object
+                        };
+                        break;
+                    }
                 }
-                else
+                schema.Properties.Add(itemKey, property);
+                if(itemSchema.Count > 0)
                 {
-                    var itemSchema = await generator.GenerateAsync(item);
-                    schema.Properties.Add(itemKey, new JsonProperty()
-                    {
-                        Reference = itemSchema
-                    });
-                    schema.Definitions.Add(itemKey, itemSchema);
+                    var jsonSchema = await JsonSchema4.FromJsonAsync(itemSchema.ToString());
+                    property.Reference = jsonSchema;
+                    schema.Definitions.Add(itemKey, jsonSchema);
                 }
             }
             return schema.ToJson();
@@ -115,6 +135,14 @@ namespace Threax.Extensions.Configuration.SchemaBinder
             set
             {
                 config[key] = value;
+            }
+        }
+
+        private void EnsureSection(string section)
+        {
+            if (!configObjects.ContainsKey(section))
+            {
+                configObjects.Add(section, new List<Type>());
             }
         }
     }
