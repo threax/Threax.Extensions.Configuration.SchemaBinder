@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
-using NJsonSchema;
-using NJsonSchema.Generation;
+using Threax.NJsonSchema;
+using Threax.NJsonSchema.Generation;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
