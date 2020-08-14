@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Andrew Piper</Authors>
     <Description>This library helps track configuration information to build a json schema from the requested objects.</Description>
-    <Version>2.0.1-pre01</Version>
+    <Version>2.0.1</Version>
     <IncludeSymbols>True</IncludeSymbols>
     <IncludeSource>True</IncludeSource>
     <PackageReleaseNotes>Track all objects used with a config section and use all of them to build the schema.</PackageReleaseNotes>
