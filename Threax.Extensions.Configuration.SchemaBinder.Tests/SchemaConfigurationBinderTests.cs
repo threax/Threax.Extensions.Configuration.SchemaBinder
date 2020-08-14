@@ -111,7 +111,7 @@ namespace Threax.Extensions.Configuration.SchemaBinder.Tests
         }
 
         [Fact]
-        public async Task GetValueTest()
+        public void GetValueTest()
         {
             var binder = mockup.Get<SchemaConfigurationBinder>();
             Assert.Equal("Hi", binder["GetValueTest"]);
